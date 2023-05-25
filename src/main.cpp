@@ -1,6 +1,7 @@
 #include <cassert>
 #include <cstdio>
 #include <iostream>
+#include <fstream>
 #include <memory>
 #include <string>
 #include "ast.h"
@@ -32,11 +33,13 @@ int main(int argc, const char *argv[]) {
   auto ret = yyparse(ast);
   assert(!ret);
 
-  //Dump AST
-  ast->Dump();
-  cout << endl;
+  // 输出解析得到的 AST, 保存在内存中的结构
+  // ast->Dump();
+  // cout << endl;
 
-  // 输出解析得到的 AST, 其实就是个字符串
-  //cout << *ast << endl;
+  //根据ast生成文本形式的 koopa IR
+  ofstream ir_out(output);
+  if(ir_out.is_open())
+    ir_out << ast->PrintKoopaIR();
   return 0;
 }

@@ -5,6 +5,7 @@ public:
     virtual ~BaseAST() = default;
     
     virtual void Dump() const = 0;
+    virtual std::string PrintKoopaIR() const = 0;
 };
 
 
@@ -17,6 +18,11 @@ public:
         func_def->Dump();
         std::cout << " }";
     }
+
+    std::string PrintKoopaIR() const override {
+        return "fun " + func_def->PrintKoopaIR();
+    }
+
 };
 
 class FuncDefAST : public BaseAST{
@@ -32,6 +38,14 @@ public:
         block->Dump();
         std::cout << " }";
     }
+
+    std::string PrintKoopaIR() const override {
+        // std::cout << "@" << ident << "(): ";
+        // func_type->PrintKoopaIR();
+        // block->PrintKoopaIR();
+
+        return "@" + ident + "(): " + func_type->PrintKoopaIR() + block->PrintKoopaIR();
+    }
 };
 
 class FuncTypeAST : public BaseAST{
@@ -42,6 +56,11 @@ public:
         std::cout << "FuncTypeAST { ";
         std::cout << func_type;
         std::cout << " }";
+    }
+
+    std::string PrintKoopaIR() const override {
+        //std::cout << "i32 ";
+        return "i32";
     }
 };
 
@@ -54,6 +73,14 @@ public:
         stmt->Dump();
         std::cout << " }";
     }
+
+    std::string PrintKoopaIR() const override {
+        // std::cout << "{" << std::endl;
+        // stmt->PrintKoopaIR();
+        // std::cout << "}" << std::endl;
+
+        return "{\n" + stmt->PrintKoopaIR() + "}\n";
+    }
 };
 
 class StmtAST : public BaseAST{
@@ -63,6 +90,14 @@ public:
     void Dump() const override {
         std::cout << "StmtAST { ";
         std::cout << number;
-        std::cout << " }";
+        std::cout << "}";
+    }
+
+    std::string PrintKoopaIR() const override {
+        // std::cout << "\%entry:" << std::endl;
+        // std::cout << "  ret " << number << std::endl; 
+
+        return "\%entry:\n  ret " + std::to_string(number) + "\n";
+        
     }
 };
